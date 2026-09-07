@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_filters',
 
     'rest_framework',
+    'djoser',
 
     # local apps
     'debug_toolbar',
@@ -148,6 +149,15 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     'COERCE_DECIMAL_TO_STRING': False,
+    'DEFAULT_AUTHENTIATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': (
+        'JWT',
+    ),
 }
 
 AUTH_USER_MODEL = 'core.CustomUser'

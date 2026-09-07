@@ -11,6 +11,8 @@ factory-boy = "*"
 faker = "*"
 djangorestframework = "*"
 drf-nested-routers = "*"
+djoser = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 
