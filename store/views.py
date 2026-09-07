@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -100,6 +100,20 @@ class CartItemViewSet(ModelViewSet):
 class CustomerViewSet(ModelViewSet):
     serializer_class = serializers.CustomerSerializer
     queryset = models.Customer.objects.all()
+
+    @action(detail=False, methods=['GET','PUT',])
+    def me(self, request):
+        user_id = request.user.id 
+        customer = models.Customer.objects.get(user_id=user_id)
+        if request.method == 'GET':
+
+            serializer = serializers.CustomerSerializer
+            return Response(serializer.data)
+        elif request.method == 'PUT':
+            serializer = serializers.CustomerSerializer(customer, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
 
 # class ProductDetail(RetrieveUpdateDestroyAPIView):
 #     # Class-Based View (short virsion)
