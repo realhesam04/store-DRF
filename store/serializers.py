@@ -133,4 +133,8 @@ class CartSerilizer(serializers.ModelSerializer):
         fields = ['id','created_at','items','total_price',]
         read_only_fields = ['id',]
         
-
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Customer
+        fields = ['id','user','birth_date',]
+        
