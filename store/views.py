@@ -9,6 +9,7 @@ from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveMode
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .pagination import DefaultPagination
@@ -100,8 +101,10 @@ class CartItemViewSet(ModelViewSet):
 class CustomerViewSet(ModelViewSet):
     serializer_class = serializers.CustomerSerializer
     queryset = models.Customer.objects.all()
+    permission_classes = [IsAdminUser]
 
-    @action(detail=False, methods=['GET','PUT',])
+
+    @action(detail=False, methods=['GET','PUT',], permission_classes=[IsAuthenticated])
     def me(self, request):
         user_id = request.user.id 
         customer = models.Customer.objects.get(user_id=user_id)
