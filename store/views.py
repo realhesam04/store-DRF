@@ -16,7 +16,7 @@ from .pagination import DefaultPagination
 from . import serializers
 from . import models
 from . import filters
-from .permissions import IsAdminOrReadOnly, SendPrivateEmailToCustomerPermission
+from .permissions import CustomDjangoModelPermissions, IsAdminOrReadOnly, SendPrivateEmailToCustomerPermission
 
    
 class ProductViewSet(ModelViewSet):
@@ -31,6 +31,7 @@ class ProductViewSet(ModelViewSet):
     pagination_class = DefaultPagination
     # filterset_fields = ['category_id','inventory',]
     filterset_class = filters.ProductFilter
+    # permission_classes = [CustomDjangoModelPermissions]
 
     # def get_queryset(self):
     #     queryset = models.Product.objects.all()
