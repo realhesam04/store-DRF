@@ -16,6 +16,7 @@ from .pagination import DefaultPagination
 from . import serializers
 from . import models
 from . import filters
+from .permissions import IsAdminOrReadOnly
 
    
 class ProductViewSet(ModelViewSet):
@@ -53,6 +54,7 @@ class CategoryViewSet(ModelViewSet):
 
     serializer_class = serializers.CategorySerializer
     queryset = models.Category.objects.prefetch_related('products').all()
+    permission_classes = [IsAdminOrReadOnly]
 
     def destroy(self, request, pk):
         category = get_object_or_404(models.Category.objects.prefetch_related('products').all(), pk=pk)
