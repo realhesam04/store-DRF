@@ -9,14 +9,14 @@ from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveMode
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .pagination import DefaultPagination
 from . import serializers
 from . import models
 from . import filters
-from .permissions import IsAdminOrReadOnly
+from .permissions import IsAdminOrReadOnly, SendPrivateEmailToCustomerPermission
 
    
 class ProductViewSet(ModelViewSet):
@@ -112,13 +112,20 @@ class CustomerViewSet(ModelViewSet):
         customer = models.Customer.objects.get(user_id=user_id)
         if request.method == 'GET':
 
-            serializer = serializers.CustomerSerializer
+            serializer = serializers.CustomerSerializer(customer)
             return Response(serializer.data)
         elif request.method == 'PUT':
             serializer = serializers.CustomerSerializer(customer, data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
+        
+    @action(detail=True,methods=['GET'],permission_classes=[SendPrivateEmailToCustomerPermission])
+    def send_private_email(self, request, pk):
+        return Response(
+            f'Sending Private Email to Customer {pk}'
+        )
+
 
 # class ProductDetail(RetrieveUpdateDestroyAPIView):
 #     # Class-Based View (short virsion)
