@@ -3,7 +3,7 @@ from django.utils.text import slugify
 from decimal import Decimal
 from rest_framework import serializers
 
-from .models import Category, Order, OrderItem
+from .models import Category, Order, OrderItem, Product
 from store import models
 
 DOLLARS_TO_TOMAN = 190000
@@ -139,11 +139,14 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields = ['id','user','birth_date',]
         read_only_fields = ['user',]
 
-
+class OrderItemProductSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = Product 
+        fields = ['id','name','unit_price',]
 
 class OrderItemSerializer(serializers.ModelSerializer):
 
-    product = ProductSerializer()
+    product = OrderItemProductSerializer()
 
     class Meta:
         model = OrderItem
@@ -152,6 +155,8 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
      
+    items = OrderItemSerializer(many=True)
+
     class Meta:
         model = Order 
         fields = ['id','customer_id','status','datetime_created','items',]
