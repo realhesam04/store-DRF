@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 
 from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
@@ -130,6 +130,14 @@ class CustomerViewSet(ModelViewSet):
 class OrderViewSet(ModelViewSet):
     serializer_class = serializers.OrderSerializer
     queryset = models.Order.objects.all()
+
+    def get_queryset(self):
+        return models.Order.objects.prefetch_related(
+            Prefetch(
+                'items',
+                queryset=models.OrderItem.objects.select_related('product'),
+            )
+        )
 
 
 # class ProductDetail(RetrieveUpdateDestroyAPIView):
