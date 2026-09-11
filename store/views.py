@@ -126,6 +126,10 @@ class CustomerViewSet(ModelViewSet):
         return Response(
             f'Sending Private Email to Customer {pk}'
         )
+    
+class OrderViewSet(ModelViewSet):
+    serializer_class = serializers.OrderSerializer
+    queryset = models.Order.objects.all()
 
 
 # class ProductDetail(RetrieveUpdateDestroyAPIView):
